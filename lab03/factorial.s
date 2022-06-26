@@ -22,3 +22,22 @@ main:
 
 factorial:
     # YOUR CODE HERE
+    addi sp, sp, -8
+    sw s0, 0(sp)
+    sw ra, 4(sp)
+    mv s0, a0
+
+    addi t0, zero, 1
+    beq s0, t0, base
+
+    addi a0, a0, -1
+    jal ra, factorial
+
+    mul a0, s0, a0
+
+    base:
+
+    lw s0, 0(sp)
+    lw ra, 4(sp)
+    addi sp, sp, 8
+    jr ra
