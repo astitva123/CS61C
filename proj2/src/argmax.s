@@ -18,14 +18,36 @@ argmax:
 
     # Prologue
 
+    addi t0, zero, 1
+    blt a1, t0, loop_end    
 
 loop_start:
 
+    mv t0, zero     
+    mv t1, zero    
 
 loop_continue:
 
+    beq t0, a1, loop_end   
+
+    slli t2, t0, 2         
+    add t2, a0, t2      
+
+    lw t2, 0(t2)         
+    lw t3, 0(t1)           
+
+    bge t3, t2, no_update 
+
+    mv t1, t0
+
+no_update:
+
+    addi t0, t0, 1
+    j loop_continue
 
 loop_end:
+
+    mv a0, t1
     
 
     # Epilogue
