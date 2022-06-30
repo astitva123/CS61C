@@ -1,6 +1,6 @@
-##############################################################
+# #############################################################
 # Do not modify! (But feel free to use the functions provided)
-##############################################################
+# #############################################################
 
 #define c_print_int 1
 #define c_print_str 4
@@ -40,90 +40,90 @@ main:
 # End main
 
 
-#================================================================
+# ================================================================
 # void print_int(int a1)
 # Prints the integer in a1.
 # args:
 #   a1 = integer to print
 # return:
 #   void
-#================================================================
+# ================================================================
 print_int:
     li a0 c_print_int
     ecall
     ret
 
 
-#================================================================
+# ================================================================
 # void print_str(char *a1)
 # Prints the null-terminated string at address a1.
 # args:
 #   a1 = address of the string you want printed.
 # return:
 #   void
-#================================================================
+# ================================================================
 print_str:
     li a0 c_print_str
     ecall
     ret
 
 
-#================================================================
+# ================================================================
 # int atoi(char* a1)
 # Returns the integer version of the string at address a1.
 # args:
 #   a1 = address of the string you want to turn into an integer.
 # return:
 #   a0 = Integer representation of string 
-#================================================================
+# ================================================================
 atoi:
     li a0 c_atoi
     ecall
     ret
 
 
-#================================================================
+# ================================================================
 # void *sbrk(int a1)
 # Allocates a1 bytes onto the heap.
 # args:
 #   a1 = Number of bytes you want to allocate.
 # return:
 #   a0 = Pointer to the start of the allocated memory
-#================================================================
+# ================================================================
 sbrk:
     li a0 c_sbrk
     ecall
     ret
 
 
-#================================================================
+# ================================================================
 # void noreturn exit()
 # Exits the program with a zero exit code.
 # args:
 #   None
 # return:
 #   No Return
-#================================================================
+# ================================================================
 exit:
     li a0 c_exit
     ecall
 
 
-#================================================================
+# ================================================================
 # void print_char(char a1)
 # Prints the ASCII character in a1 to the console.
 # args:
 #   a1 = character to print
 # return:
 #   void
-#================================================================
+# ================================================================
 print_char:
     li a0 c_print_char
     ecall
     ret
 
 
-#================================================================
+# ================================================================
 # int fopen(char *a1, int a2)
 # Opens file with name a1 with permissions a2.
 # args:
@@ -131,15 +131,15 @@ print_char:
 #   a2 = permissions (0, 1, 2, 3, 4, 5 = r, w, a, r+, w+, a+)
 # return:
 #   a0 = file descriptor
-#================================================================
+# ================================================================
 fopen:
     li a0 c_openFile
     ecall
-    #FOPEN_RETURN_HOOK
+    # FOPEN_RETURN_HOOK
     ret
 
 
-#================================================================
+# ================================================================
 # int fread(int a1, void *a2, size_t a3)
 # Reads a3 bytes of the file into the buffer a2.
 # args:
@@ -148,7 +148,7 @@ fopen:
 #   a3 = Number of bytes to be read.
 # return:
 #   a0 = Number of bytes actually read.
-#================================================================
+# ================================================================
 fread:
     li a0 c_readFile
     ecall
@@ -156,7 +156,7 @@ fread:
     ret
 
 
-#================================================================
+# ================================================================
 # int fwrite(int a1, void *a2, size_t a3, size_t a4)
 # Writes a3 * a4 bytes from the buffer in a2 to the file descriptor a1.
 # args:
@@ -167,7 +167,7 @@ fread:
 # return:
 #   a0 = Number of elements writen. If this is less than a3,
 #    it is either an error or EOF. You will also need to still flush the fd.
-#================================================================
+# ================================================================
 fwrite:
     li a0 c_writeFile
     ecall
@@ -175,14 +175,14 @@ fwrite:
     ret
 
 
-#================================================================
+# ================================================================
 # int fclose(int a1)
 # Closes the file descriptor a1.
 # args:
 #   a1 = file descriptor
 # return:
 #   a0 = 0 on success, and EOF (-1) otherwise.
-#================================================================
+# ================================================================
 fclose:
     li a0 c_closeFile
     ecall
@@ -190,56 +190,56 @@ fclose:
     ret
 
 
-#================================================================
+# ================================================================
 # void noreturn exit2(int a1)
 # Exits the program with error code a1.
 # args:
 #   a1 = Exit code.
 # return:
 #   This program does not return.
-#================================================================
+# ================================================================
 exit2:
     li a0 c_exit2
     ecall
     ret
 
 
-#================================================================
+# ================================================================
 # int fflush(int a1)
 # Flushes the data to the filesystem.
 # args:
 #   a1 = file descriptor
 # return:
 #   a0 = 0 on success, and EOF (-1) otherwise.
-#================================================================
+# ================================================================
 fflush:
     li a0 c_fflush
     ecall
     ret
 
 
-#================================================================
+# ================================================================
 # int ferror(int a1)
 # Returns a nonzero value if the file stream has errors, otherwise it returns 0.
 # args:
 #   a1 = file descriptor
 # return:
 #   a0 = Nonzero falue if the end of file is reached. 0 Otherwise.
-#================================================================
+# ================================================================
 ferror:
     li a0 c_ferror
     ecall
     ret
 
 
-#================================================================
+# ================================================================
 # void print_hex(int a1)
 #
 # args:
 #   a1 = The word which will be printed as a hex value.
 # return:
 #   void
-#================================================================
+# ================================================================
 print_hex:
     li a0 c_printHex
     ecall
@@ -248,14 +248,14 @@ print_hex:
 
 
 
-#================================================================
+# ================================================================
 # void* malloc(int a0)
 # Allocates heap memory and return a pointer to it
 # args:
 #   a0 is the # of bytes to allocate heap memory for
 # return:
 #   a0 is the pointer to the allocated heap memory
-#================================================================
+# ================================================================
 malloc:
     # Call to sbrk
     mv a1 a0
@@ -266,14 +266,14 @@ malloc:
     ret
 
 
-#================================================================
+# ================================================================
 # void free(int a0)
 # Frees heap memory referenced by pointer
 # args:
 #   a0 is the pointer to heap memory to free
 # return:
 #   void
-#================================================================
+# ================================================================
 free:
     mv a1 a0
     li a0 0x3CC
@@ -281,14 +281,14 @@ free:
     ecall
     ret
 
-#================================================================
+# ================================================================
 # void num_alloc_blocks(int a0)
 # Returns the number of currently allocated blocks
 # args:
 #   void
 # return:
 #   a0 is the # of allocated blocks
-#================================================================
+# ================================================================
 num_alloc_blocks:
     li a0, 0x3CC
     li a6, 5
@@ -310,7 +310,7 @@ print_num_alloc_blocks:
     addi sp, sp 4
     ret
 
-#================================================================
+# ================================================================
 # void print_int_array(int* a0, int a1, int a2)
 # Prints an integer array, with spaces between the elements
 # args:
@@ -319,7 +319,7 @@ print_num_alloc_blocks:
 #   a2 is the # of columns in the array
 # return:
 #   void
-#================================================================
+# ================================================================
 print_int_array:
     # Prologue
     addi sp sp -24
@@ -390,7 +390,7 @@ outer_loop_end:
 
     ret
 
-#================================================================
+# ================================================================
 # void compare_int_array(int a0, int* a0, int* a1, int a2)
 # Prints an integer array, with spaces between the elements
 # args:
@@ -401,7 +401,7 @@ outer_loop_end:
 #   a4 is the error message
 # return:
 #   void
-#================================================================
+# ================================================================
 compare_int_array:
     # Prologue
     addi sp sp -24
