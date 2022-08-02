@@ -66,20 +66,35 @@ map:
     # are modified by the callees, even when we know the content inside the functions 
     # we call. this is to enforce the abstraction barrier of calling convention.
 mapLoop:
-    add t1, s0, x0      # load the address of the array of current node into t1
+    # add t1, s0, x0      # load the address of the array of current node into t1 MISTAKE(s0 stores the address of the node, address of array is at 0(s0))
+    lw t1, 0(s0)        # CORRECTION (i)
     lw t2, 4(s0)        # load the size of the node's array into t2
 
-    add t1, t1, t0      # offset the array address by the count
+    # add t1, t1, t0      # offset the array address by the count MISTAKE (the offset must be equal to 4 since one number takes up one word)
+    slli t3, t0, 2
+    add t1, t1, t3      # CORRECTION (ii)
     lw a0, 0(t1)        # load the value at that address into a0
+
+    addi sp, sp, -12    # CORRECTION (iii)
+    sw t0, 0(sp)
+    sw t1, 4(sp)
+    sw t2, 8(sp)
 
     jalr s1             # call the function on that value.
 
-    sw a0, 0(t1)        # store the returned value back into the array
-    addi t0, t0, 1      # increment the count
-    bne t0, t2, mapLoop # repeat if we haven't reached the array size yet
+    lw t0, 0(sp)
+    lw t1, 4(sp)
+    lw t2, 8(sp)
+    addi sp, sp, 12
 
-    la a0, 8(s0)        # load the address of the next node into a0
-    lw a1, 0(s1)        # put the address of the function back into a1 to prepare for the recursion
+    sw a0, 0(t1)        # store the returned value back into the array MISTAKE (the function s1 might have changed t1, hence we need a way to preserve it's value)
+    addi t0, t0, 1      # increment the count MISTAKE (the function s1 might have changed t0)
+    bne t0, t2, mapLoop # repeat if we haven't reached the array size yet MISTAKE (t2 might be changed)
+
+    # la a0, 8(s0)        # load the address of the next node into a0 MISTAKE (we don't want the address of the pointer to the next node but the address stored at next)
+    lw a0, 8(s0)        # CORRECTION (iv)
+    # lw a1, 0(s1)        # put the address of the function back into a1 to prepare for the recursion MISTAKE (s1 itself stores the address, we do not need the addrewss of s1)
+    add a1, s1, zero	# CORRECTION (v)
 
     jal  map            # recurse
 done:

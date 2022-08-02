@@ -1,0 +1,6 @@
+1. The five mistakes in the map function of megalistmanip.s are ->
+    i) s0 stores the address of the node, address of array is at 0(s0) 
+    ii) the offset must be equal to 4 since one number takes up one word
+    iii) the function s1 might have changed t0, t1 & t2, hence we need a way to preserve their value
+    iv) we don't want the address of the pointer to the next node but the address stored at next
+    v) s1 itself stores the address, we do not need the addrewss of s1
