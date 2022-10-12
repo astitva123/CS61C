@@ -13,7 +13,8 @@
 #define REPEAT 60
 #define BUF_SIZE 8192
 
-#define ARRAY_SIZE 5000000
+// #define ARRAY_SIZE 5000000
+#define ARRAY_SIZE 500
 
 // for web server
 char *compute_dotp(int);

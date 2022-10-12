@@ -1,24 +1,30 @@
 #ifndef THREAD_LAB_SERVER_UTILS_H
 #define THREAD_LAB_SERVER_UTILS_H
 
-#include <arpa/inet.h>
+#include <arpa/inet.h>   // LINUX
+// #include <winsock2.h>    // WINDOWS
+// #include <ws2tcpip.h>    // WINDOWS
+// #include <iphlpapi.h>    // WINDOWS
+// #include <ws2def.h>      // WINDOWS
+// #include <windows.h>     // WINDOWS
+// #include <io.h>          // WINDOWS
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <libgen.h>
-#include <netdb.h>
-#include <netinet/in.h>
+#include <netdb.h>          // LINUX
+#include <netinet/in.h>     // LINUX
 #include <pthread.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/socket.h>
+#include <sys/socket.h>     // LINUX
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <string.h>
-#include <sys/prctl.h>
+#include <sys/prctl.h>      // LINUX
 
 #include "omp_apps.h"
 #include "libhttp/libhttp.h"
@@ -39,6 +45,7 @@ extern int dotp_size;
 int start_with(char*, char*);
 
 void http_make_header(int,  char *, int, __off_t);
+// void http_make_header(int,  char *, int, _off_t);
 
 void http_make_error(int , int );
 

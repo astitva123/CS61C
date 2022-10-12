@@ -1,4 +1,5 @@
 #include "omp_apps.h"
+#define drand48() ((double)rand()/RAND_MAX)
 
 /* -------------------------------Utilties, Do Not Modify------------------------------*/
 double* gen_array(int n) {
@@ -37,7 +38,10 @@ void v_add_optimized_adjacent(double* x, double* y, double* z) {
   // Do NOT use the `for` directive here!
   #pragma omp parallel
   {
-    for(int i=0; i<ARRAY_SIZE; i++)
+    int thread_ID = omp_get_thread_num();
+    int num_threads = omp_get_num_threads();
+
+    for(int i=thread_ID; i<ARRAY_SIZE; i+=thread_ID)
       z[i] = x[i] + y[i];
   }
 }
@@ -48,7 +52,11 @@ void v_add_optimized_chunks(double* x, double* y, double* z) {
   // Do NOT use the `for` directive here!
   #pragma omp parallel
   {
-    for(int i=0; i<ARRAY_SIZE; i++)
+    int num_threads = omp_get_num_threads();
+    int block = ARRAY_SIZE/num_threads;
+    int thread_ID = omp_get_thread_num();
+
+    for(int i=thread_ID*block; i<thread_ID*block + block && i < ARRAY_SIZE; i++)
       z[i] = x[i] + y[i];
   }
 }
@@ -75,10 +83,14 @@ double dotp_manual_optimized(double* x, double* y, int arr_size) {
   double global_sum = 0.0;
   #pragma omp parallel
   {
+    double local_sum = 0;
+
     #pragma omp for
     for (int i = 0; i < arr_size; i++)
-      #pragma omp critical
-      global_sum += x[i] * y[i];
+      local_sum += x[i] * y[i];
+
+    #pragma omp critical
+    global_sum += local_sum;
   }
   return global_sum;
 }
@@ -90,9 +102,8 @@ double dotp_reduction_optimized(double* x, double* y, int arr_size) {
   double global_sum = 0.0;
   #pragma omp parallel
   {
-    #pragma omp for
+    #pragma omp for reduction(+ :global_sum)
     for (int i = 0; i < arr_size; i++)
-      #pragma omp critical
       global_sum += x[i] * y[i];
   }
   return global_sum;
