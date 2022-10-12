@@ -54,6 +54,27 @@ long long int sum_simd(int vals[NUM_ELEMS]) {
 	for(unsigned int w = 0; w < OUTER_ITERATIONS; w++) {
 		/* YOUR CODE GOES HERE */
 
+		__m128i sum = _mm_setzero_si128();
+
+		for(unsigned int i = 0; i < NUM_ELEMS / 4 * 4; i += 4) {
+			__m128i buffer = _mm_loadu_si128((__m128i*)(vals+i));
+			__m128i comp = _mm_cmpgt_epi32(buffer, _127);
+			buffer = _mm_and_si128(buffer, comp);
+			sum = _mm_add_epi32(sum, buffer);
+		}
+
+		int temp_array[4] = {0,0,0,0};
+		_mm_storeu_si128((__m128i*)temp_array, sum);
+
+		for(int i = 0;i < 4;i++) result += temp_array[i];
+
+		//This is what we call the TAIL CASE
+		//For when NUM_ELEMS isn't a multiple of 4
+		//NONTRIVIAL FACT: NUM_ELEMS / 4 * 4 is the largest multiple of 4 less than NUM_ELEMS
+		for(unsigned int i = NUM_ELEMS / 4 * 4; i < NUM_ELEMS; i++) {
+			if(vals[i] >= 128) result += vals[i];
+		}
+
 		/* You'll need a tail case. */
 
 	}
@@ -69,7 +90,42 @@ long long int sum_simd_unrolled(int vals[NUM_ELEMS]) {
 	for(unsigned int w = 0; w < OUTER_ITERATIONS; w++) {
 		/* COPY AND PASTE YOUR sum_simd() HERE */
 		/* MODIFY IT BY UNROLLING IT */
+		__m128i sum = _mm_setzero_si128();
 
+		for(unsigned int i = 0; i < NUM_ELEMS / 16 * 16; i += 16) {
+			
+			__m128i buffer = _mm_loadu_si128((__m128i*)(vals+i));
+			__m128i comp = _mm_cmpgt_epi32(buffer, _127);
+			buffer = _mm_and_si128(buffer, comp);
+			sum = _mm_add_epi32(sum, buffer);
+
+			buffer = _mm_loadu_si128((__m128i*)(vals+i+4));
+			comp = _mm_cmpgt_epi32(buffer, _127);
+			buffer = _mm_and_si128(buffer, comp);
+			sum = _mm_add_epi32(sum, buffer);
+
+			buffer = _mm_loadu_si128((__m128i*)(vals+i+8));
+			comp = _mm_cmpgt_epi32(buffer, _127);
+			buffer = _mm_and_si128(buffer, comp);
+			sum = _mm_add_epi32(sum, buffer);
+			
+			buffer = _mm_loadu_si128((__m128i*)(vals+i+12));
+			comp = _mm_cmpgt_epi32(buffer, _127);
+			buffer = _mm_and_si128(buffer, comp);
+			sum = _mm_add_epi32(sum, buffer);
+		}
+
+		int temp_array[4] = {0,0,0,0};
+		_mm_storeu_si128((__m128i*)temp_array, sum);
+
+		for(int i = 0;i < 4;i++) result += temp_array[i];
+
+		//This is what we call the TAIL CASE
+		//For when NUM_ELEMS isn't a multiple of 4
+		//NONTRIVIAL FACT: NUM_ELEMS / 4 * 4 is the largest multiple of 4 less than NUM_ELEMS
+		for(unsigned int i = NUM_ELEMS / 16 * 16; i < NUM_ELEMS; i++) {
+			if(vals[i] >= 128) result += vals[i];
+		}
 		/* You'll need 1 or maybe 2 tail cases here. */
 
 	}
