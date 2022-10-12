@@ -3,6 +3,7 @@
 #include <sys/time.h>
 #include <time.h>
 
+#define drand48() ((double)rand()/RAND_MAX)
 
 /* To save you time, we are including all 6 variants of the loop ordering
    as separate functions and then calling them using function pointers.

@@ -58,7 +58,8 @@ wordZero:
 	sw	zero,  0(s0)		# array[index/4] = 0
 
 wordCheck:
-	add	s0, s0, t1		# increment ptr
+	add	s0, s0, t1		# increment ptr\
+	ebreak;
 	blt	s0, s1, wordLoop	# inner loop done?
 
 	addi	a2, a2, -1

@@ -4,6 +4,9 @@
 #include <time.h>
 #include "transpose.h"
 
+#define srand48(x) srand((int)(x))
+#define drand48() ((double)rand()/RAND_MAX)
+
 void benchmark(int *A, int *B, int n, int blocksize,
     void (*transpose)(int, int, int*, int*), char *description) {
 
@@ -12,8 +15,12 @@ void benchmark(int *A, int *B, int n, int blocksize,
 
     /* initialize A,B to random integers */
     srand48( time( NULL ) );
-    for( i = 0; i < n*n; i++ ) A[i] = lrand48( );
-    for( i = 0; i < n*n; i++ ) B[i] = lrand48( );
+    // for( i = 0; i < n*n; i++ ) A[i] = drand48( );
+    // for( i = 0; i < n*n; i++ ) B[i] = drand48( );
+    // for( i = 0; i < n*n; i++ ) A[i] = rand( );
+    // for( i = 0; i < n*n; i++ ) B[i] = rand( );
+    for( i = 0; i < n*n; i++ ) A[i] = i;
+    for( i = 0; i < n*n; i++ ) B[i] = i;
 
     /* measure performance */
     struct timeval start, end;
@@ -26,10 +33,21 @@ void benchmark(int *A, int *B, int n, int blocksize,
         1.0e-6 * (end.tv_usec - start.tv_usec);
     printf( "%g milliseconds\n", seconds*1e3 );
 
+    // for( i = 0; i < n*n; i++ ) {
+    //     if(i%n == 0) printf("\n");
+    //     printf("%d ", A[i]);
+    // }
+
+    // for( i = 0; i < n*n; i++ ) {
+    //     if(i%n == 0) printf("\n");
+    //     printf("%d ", B[i]);
+    // }
+
     /* check correctness */
     for( i = 0; i < n; i++ ) {
         for( j = 0; j < n; j++ ) {
             if( B[j+i*n] != A[i+j*n] ) {
+                printf("%d\n", A[i+j*n]);
                 printf("Error!!!! Transpose does not result in correct answer!!\n");
                 exit( -1 );
             }
